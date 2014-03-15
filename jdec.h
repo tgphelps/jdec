@@ -22,10 +22,15 @@ void hexdump(FILE *fp, void *buff, int len, int hex_only);
 void rawdump(unsigned char *buff, char *fileout, int size);
 
 
-int dissect_class(void);
+int parse_class(void);
 
-int validate_class_hdr(byte *p);
+int validate_class_hdr();
 void disassemble(void);
+void release_buffers(void);
 
-int read_short(byte *p);
-int read_int(byte *p);
+void class_open(byte *);
+byte *read_curpos(void);
+int read_byte(void);
+int read_short(void);
+int read_int(void);
+void skip_bytes(int n);

@@ -23,16 +23,3 @@ usage(void)
 {
 	fputs(usage_msg, stderr);
 }
-
-int
-read_short(byte *p)
-{
-	return (*p << 8) + *(p + 1);
-}
-
-int
-read_int(byte *p)
-{
-	int i = read_short(p);
-	return (i << 16) + read_short(p + 2);
-}

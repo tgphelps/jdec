@@ -10,11 +10,36 @@
 
 static byte * p;
 
+
 void
 class_open(byte *class)
 {
 	p = class;
 }
+
+
+byte *
+read_curpos(void)
+{
+	return p;
+}
+
+
+void
+skip_bytes(int n)
+{
+	p += n;
+}
+
+
+int
+read_byte(void)
+{
+	int n = *p;
+	++p;
+	return n;
+}
+
 
 int
 read_short(void)
@@ -23,6 +48,7 @@ read_short(void)
 	p += 2;
 	return n;
 }
+
 
 int
 read_int(void)

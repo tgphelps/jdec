@@ -91,8 +91,6 @@ freebuff(void *p)
 void
 buffer_summary(void)
 {
-/***
 	fprintf(stderr, "DEBUG: buffer gets = %u, frees = %u\n",
 		total_gets, total_frees);
-***/
 }

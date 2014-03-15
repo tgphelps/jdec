@@ -51,18 +51,21 @@ main(int argc, char *argv[])
 			rawdump(g.pclass + g.offset, "", size);
 	}
 
-	if (!validate_class_hdr(g.pclass)) {
+	class_open(g.pclass);
+
+	if (!validate_class_hdr()) {
 		fprintf(stderr, "%s is not a Java class file\n", g.file_in);
 		abort();
 	}
-	if (!dissect_class()) {
-		fprintf(stderr, "Failed to dissect the class file\n");
-		abort();
+	if (!parse_class()) {
+		fprintf(stderr, "Failed to parse the class file\n");
+		// abort();
 	}
 
 	if (g.disassemble)
 		disassemble();
 
+	release_buffers();
 	freebuff(g.pclass);
 	buffer_summary();
 	return 0;
