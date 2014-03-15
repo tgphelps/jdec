@@ -63,6 +63,9 @@ parse_constant_pool(void)
 			dummy = read_short();
 			skip_bytes(dummy);
 			break;
+		case CONSTANT_String:
+			dummy = read_short();
+			break;
 		default:
 			printf("Unknown tag %d\n", tag);
 			abort();
@@ -90,9 +93,38 @@ static int parse_interfaces(void)
 static int
 parse_fields(void)
 {
-	cl.fields_count = read_short();
+	int n;
+	int count = read_short();
+	byte *p = getbuff(count * sizeof(byte *));
+	cl.fields_count = count;
+
+	cl.fields = (byte **)p;
 	printf("fields count = %d\n", cl.fields_count);
 	
+	for (n = 0; n < cl.fields_count; ++n) {
+		int flags, name, descr, attrs;
+		byte *here = read_curpos();
+		p = here;
+		++p;
+		printf("Field %d:\n", n + 1);
+		flags = read_short();
+		name = read_short();
+		descr = read_short();
+		attrs = read_short();
+		printf("   flags %04x name %d descr %d attrs %d\n",
+			flags, name, descr, attrs);
+		if (attrs) {
+			printf("Cannot handle field attributes yet\n");
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+static int
+parse_methods(void)
+{
 	return 0;
 }
 
@@ -116,6 +148,8 @@ parse_class(void)
 		return 0;
 	if (!parse_fields())
 		return 0;
+	if (!parse_methods())
+		return 0;
 
 	return 1;
 }
@@ -125,4 +159,5 @@ release_buffers(void)
 {
 	// Release any buffers we allocated to hold class file stuff
 	freebuff(cl.constant_pool);
+	freebuff(cl.fields);
 };

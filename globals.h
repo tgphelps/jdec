@@ -30,7 +30,7 @@ struct {
 	int interfaces_count;
 	byte *interfaces;
 	int fields_count;
-	byte *fields;
+	byte **fields;
 	int methods_count;
 	byte *methods;
 	int attributes_count;
