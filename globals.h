@@ -17,3 +17,22 @@ struct {
 	byte *pclass;
 	
 } g;
+
+struct {
+	int magic;
+	int minor_version;
+	int major_version;
+	int constant_pool_count;
+	byte *constant_pool;
+	int access_flags;
+	int this_class;
+	int super_class;
+	int interfaces_count;
+	byte *interfaces;
+	int fields_count;
+	byte *fields;
+	int methods_count;
+	byte *methods;
+	int attributes_count;
+	byte *attributes;
+} cl;

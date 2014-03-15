@@ -10,11 +10,14 @@ extern
 
 int validate_class_hdr(byte *p)
 {
-	int i;
 	errmsg("validating class header\n");
-	i = read_int(p);
-	if (i == 0xcafebabe) {
+	cl.magic = read_int(p);
+	cl.minor_version = read_short(p + 4);
+	cl.major_version = read_short(p + 6);
+	if (cl.magic == 0xcafebabe) {
 		errmsg("magic number OKAY\n");
+		printf("major/minor versions = %d/%d\n",
+			cl.major_version, cl.minor_version);
 		return 1;
 	}
 	return 0;
@@ -23,6 +26,7 @@ int validate_class_hdr(byte *p)
 int
 dissect_class(void)
 {
-	errmsg("Class dissection goes here\n");
-	return 0;
+	cl.constant_pool_count = read_short(g.pclass + 8);
+	printf("constant count = %d\n", cl.constant_pool_count);
+	return 1;
 }
