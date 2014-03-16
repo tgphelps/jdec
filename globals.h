@@ -32,7 +32,7 @@ struct {
 	int fields_count;
 	byte **fields;
 	int methods_count;
-	byte *methods;
+	byte **methods;
 	int attributes_count;
-	byte *attributes;
+	byte **attributes;
 } cl;

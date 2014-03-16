@@ -49,23 +49,23 @@ main(int argc, char *argv[])
 			rawdump(g.pclass + g.offset, g.file_out, size);
 		else
 			rawdump(g.pclass + g.offset, "", size);
+	} else {
+
+		class_open(g.pclass);
+
+		if (!validate_class_hdr()) {
+			fprintf(stderr, "%s is not a Java class file\n",
+				g.file_in);
+			abort();
+		}
+		if (!parse_class()) {
+			fprintf(stderr, "Failed to parse the class file\n");
+			abort();
+		}
+		if (g.disassemble)
+			disassemble();
+		release_buffers();
 	}
-
-	class_open(g.pclass);
-
-	if (!validate_class_hdr()) {
-		fprintf(stderr, "%s is not a Java class file\n", g.file_in);
-		abort();
-	}
-	if (!parse_class()) {
-		fprintf(stderr, "Failed to parse the class file\n");
-		// abort();
-	}
-
-	if (g.disassemble)
-		disassemble();
-
-	release_buffers();
 	freebuff(g.pclass);
 	buffer_summary();
 	return 0;

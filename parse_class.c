@@ -90,6 +90,20 @@ static int parse_interfaces(void)
 }
 
 
+static void
+skip_attributes(int count)
+{
+	int n;
+	for (n = 1; n <= count; ++n) {
+		int name = read_short();
+		int len = read_int();
+		printf("   Attr %d: name = %d  size = %d\n",
+			n, name, len);
+		skip_bytes(len);
+	}
+}
+
+
 static int
 parse_fields(void)
 {
@@ -125,7 +139,58 @@ parse_fields(void)
 static int
 parse_methods(void)
 {
-	return 0;
+	int n;
+	int count = read_short();
+	byte *p = getbuff(count * sizeof(byte *));
+	cl.methods_count = count;
+
+	cl.methods = (byte **)p;
+	printf("method count = %d\n", cl.methods_count);
+
+	for (n = 0; n < cl.methods_count; ++n) {
+		int flags, name, descr, attrs;
+		byte *here = read_curpos();
+		p = here;
+		++p;
+		printf("Method %d:\n", n + 1);
+		flags = read_short();
+		name = read_short();
+		descr = read_short();
+		attrs = read_short();
+		printf("   flags %04x name %d descr %d attrs %d\n",
+			flags, name, descr, attrs);
+		if (attrs)
+			skip_attributes(attrs);
+	}
+
+	return 1;
+}
+
+
+static int
+parse_attributes(void)
+{
+	int n;
+	int count = read_short();
+	byte *p = getbuff(count * sizeof(byte *));
+	cl.attributes_count = count;
+	cl.attributes = (byte **)p;
+
+	printf("attribute count = %d\n", cl.attributes_count);
+	//skip_attributes(cl.attributes_count);
+	for (n = 1; n <= cl.attributes_count; ++n){
+		int name, len;
+		byte *here = read_curpos();
+		p = here;
+		++p;
+		printf("Attribute %d:\n", n);
+		name = read_short();
+		len = read_int();
+		skip_bytes(len);
+		printf("   name %d len %d\n", name, len);
+	}
+
+	return 1;
 }
 
 
@@ -150,7 +215,8 @@ parse_class(void)
 		return 0;
 	if (!parse_methods())
 		return 0;
-
+	if (!parse_attributes())
+		return 0;
 	return 1;
 }
 
@@ -160,4 +226,5 @@ release_buffers(void)
 	// Release any buffers we allocated to hold class file stuff
 	freebuff(cl.constant_pool);
 	freebuff(cl.fields);
+	freebuff(cl.methods);
 };
