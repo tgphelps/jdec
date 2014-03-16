@@ -36,3 +36,4 @@ int read_int(void);
 void skip_bytes(int n);
 
 void do_show_test(void);
+void show_constant_pool(void);

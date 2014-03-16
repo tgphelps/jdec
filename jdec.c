@@ -63,22 +63,24 @@ main(int argc, char *argv[])
 			abort();
 		}
         	if (g.show_class) {
-                	int i = 0;
-                	int flag = 1;
-                	while (flag) {
-                        	switch (g.show_arg[i++]) {
-                        	case 'z':
-                                	do_show_test();
-                                	break;
-                        	case 0:
-                                	flag = 0;
-                                	break;
-                        	default:
-                                	errmsg("Invalid show argument\n");
-                        	}
-                	}
-        	}
-
+			int i = 0;
+			int flag = 1;
+			while (flag) {
+				switch (g.show_arg[i++]) {
+				case 'c':
+					show_constant_pool();
+					break;
+				case 'z':
+					do_show_test();
+					break;
+				case 0:
+					flag = 0;
+					break;
+				default:
+					errmsg("Invalid show argument\n");
+				}
+			}
+		}
 		if (g.disassemble)
 			disassemble();
 		release_buffers();

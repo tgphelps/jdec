@@ -40,20 +40,26 @@ parse_constant_pool(void)
 {
 	int n;
 	int dummy;
-	byte *p;
+	byte **p;
 
 	cl.constant_pool_count = read_short();
+	assert(cl.constant_pool_count);
 	if (g.debug)
 		printf("constant count = %d\n", cl.constant_pool_count);
 
-	p = getbuff(cl.constant_pool_count * sizeof(byte *));
-	cl.constant_pool = (byte **)p;
+	cl.constant_pool = getbuff(cl.constant_pool_count * sizeof(byte *));
+	if (g.debug)
+		printf("const pool ptr = %p\n", cl.constant_pool);
+
 	// Iterate through the constants. Store a pointer to each of
 	// them into the constant pool array.
+	p = (byte **)cl.constant_pool;
 	for (n = 1; n < cl.constant_pool_count; ++n) {
 		int tag;
 		byte *here = read_curpos();
-		p = here;
+		if (g.debug)
+			printf("curpos = %p. Storing at %p\n", here, p);
+		*p = here;
 		++p;
 		tag = read_byte();
 		switch (tag) {
@@ -251,4 +257,5 @@ release_buffers(void)
 	freebuff(cl.constant_pool);
 	freebuff(cl.fields);
 	freebuff(cl.methods);
+	freebuff(cl.attributes);
 };
