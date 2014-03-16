@@ -9,8 +9,10 @@ extern
 static struct option long_opts[] = {
 	{"help", no_argument, 0, 'h'},
 	{"raw", no_argument, 0, 'r'},
+	{"debug", no_argument, 0, 'z'},
 	{"disassemble", no_argument, 0, 'd'},
 	{"count", required_argument, 0, 'c'},
+	{"show", required_argument, 0, 's'},
 	{"offset", required_argument, 0, 1},
 	{"output", required_argument, 0, 'o'},
 	{0, 0, 0, 0}
@@ -22,7 +24,7 @@ parse_cmdline(int argc, char *argv[])
 	while (1) {
 		int c;
 		int opt_index = 0;
-		c = getopt_long(argc, argv, "hdrc:o:",
+		c = getopt_long(argc, argv, "hdrc:o:s:z",
 			long_opts, &opt_index);
 		if (c == -1) {
 			/* if optind < argc, argv[optind] is 1st non-option*/
@@ -50,6 +52,13 @@ parse_cmdline(int argc, char *argv[])
 		case 'o':
 			g.got_fileout = 1;
 			g.file_out = optarg;
+			break;
+		case 's':
+			g.show_class = 1;
+			g.show_arg = optarg;
+			break;
+		case 'z':
+			g.debug = 1;
 			break;
 		default:
 			errmsg("ERROR: getopt unknown\n");

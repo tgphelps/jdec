@@ -9,17 +9,26 @@ extern
 #include "globals.h"
 
 
+static void
+debug_print(char *s)
+{
+	if (g.debug)
+		puts(s);
+}
+
+
 int
 validate_class_hdr(void)
 {
-	errmsg("validating class header\n");
+	debug_print("validating class header");
 	cl.magic = read_int();
-	cl.minor_version = read_short();
-	cl.major_version = read_short();
 	if (cl.magic == 0xcafebabe) {
-		errmsg("magic number OKAY\n");
-		printf("major/minor versions = %d/%d\n",
-			cl.major_version, cl.minor_version);
+		cl.minor_version = read_short();
+		cl.major_version = read_short();
+		debug_print("magic number OKAY");
+		if (g.debug)
+			printf("major/minor versions = %d/%d\n",
+				cl.major_version, cl.minor_version);
 		return 1;
 	}
 	return 0;
@@ -31,7 +40,13 @@ parse_constant_pool(void)
 {
 	int n;
 	int dummy;
-	byte *p = getbuff(cl.constant_pool_count * sizeof(byte *));
+	byte *p;
+
+	cl.constant_pool_count = read_short();
+	if (g.debug)
+		printf("constant count = %d\n", cl.constant_pool_count);
+
+	p = getbuff(cl.constant_pool_count * sizeof(byte *));
 	cl.constant_pool = (byte **)p;
 	// Iterate through the constants. Store a pointer to each of
 	// them into the constant pool array.
@@ -43,31 +58,32 @@ parse_constant_pool(void)
 		tag = read_byte();
 		switch (tag) {
 		case CONSTANT_Methodref:
-			errmsg("Methodref\n");
+			debug_print("Methodref");
 			dummy = read_int();
 			break;
 		case CONSTANT_Fieldref:
-			errmsg("Fieldref\n");
+			debug_print("Fieldref");
 			dummy = read_int();
 			break;
 		case CONSTANT_Class:
-			errmsg("Class\n");
+			debug_print("Class");
 			dummy = read_short();
 			break;
 		case CONSTANT_NameAndType:
-			errmsg("NameAndType\n");
+			debug_print("NameAndType");
 			dummy = read_int();
 			break;
 		case CONSTANT_Utf8:
-			errmsg("Utf8\n");
+			debug_print("Utf8");
 			dummy = read_short();
 			skip_bytes(dummy);
 			break;
 		case CONSTANT_String:
+			debug_print("String");
 			dummy = read_short();
 			break;
 		default:
-			printf("Unknown tag %d\n", tag);
+			fprintf(stderr, "Unknown tag %d\n", tag);
 			abort();
 		}
 	}
@@ -78,7 +94,8 @@ parse_constant_pool(void)
 static int parse_interfaces(void)
 {
 	cl.interfaces_count = read_short();
-	printf("interface count = %d\n", cl.interfaces_count);
+	if (g.debug)
+		printf("interface count = %d\n", cl.interfaces_count);
 
 	if (cl.interfaces_count == 0)
 		cl.interfaces = NULL;
@@ -97,8 +114,9 @@ skip_attributes(int count)
 	for (n = 1; n <= count; ++n) {
 		int name = read_short();
 		int len = read_int();
-		printf("   Attr %d: name = %d  size = %d\n",
-			n, name, len);
+		if (g.debug)
+			printf("   Attr %d: name = %d  size = %d\n",
+				n, name, len);
 		skip_bytes(len);
 	}
 }
@@ -113,22 +131,25 @@ parse_fields(void)
 	cl.fields_count = count;
 
 	cl.fields = (byte **)p;
-	printf("fields count = %d\n", cl.fields_count);
+	if (g.debug)
+		printf("fields count = %d\n", cl.fields_count);
 	
 	for (n = 0; n < cl.fields_count; ++n) {
 		int flags, name, descr, attrs;
 		byte *here = read_curpos();
 		p = here;
 		++p;
-		printf("Field %d:\n", n + 1);
 		flags = read_short();
 		name = read_short();
 		descr = read_short();
 		attrs = read_short();
-		printf("   flags %04x name %d descr %d attrs %d\n",
-			flags, name, descr, attrs);
+		if (g.debug) {
+			printf("Field %d:\n", n + 1);
+			printf("   flags %04x name %d descr %d attrs %d\n",
+				flags, name, descr, attrs);
+		}
 		if (attrs) {
-			printf("Cannot handle field attributes yet\n");
+			errmsg("ERROR: Cannot handle field attributes yet\n");
 			return 0;
 		}
 	}
@@ -145,20 +166,23 @@ parse_methods(void)
 	cl.methods_count = count;
 
 	cl.methods = (byte **)p;
-	printf("method count = %d\n", cl.methods_count);
+	if (g.debug)
+		printf("method count = %d\n", cl.methods_count);
 
 	for (n = 0; n < cl.methods_count; ++n) {
 		int flags, name, descr, attrs;
 		byte *here = read_curpos();
 		p = here;
 		++p;
-		printf("Method %d:\n", n + 1);
 		flags = read_short();
 		name = read_short();
 		descr = read_short();
 		attrs = read_short();
-		printf("   flags %04x name %d descr %d attrs %d\n",
-			flags, name, descr, attrs);
+		if (g.debug) {
+			printf("Method %d:\n", n + 1);
+			printf("   flags %04x name %d descr %d attrs %d\n",
+				flags, name, descr, attrs);
+		}
 		if (attrs)
 			skip_attributes(attrs);
 	}
@@ -176,18 +200,20 @@ parse_attributes(void)
 	cl.attributes_count = count;
 	cl.attributes = (byte **)p;
 
-	printf("attribute count = %d\n", cl.attributes_count);
-	//skip_attributes(cl.attributes_count);
+	if (g.debug)
+		printf("attribute count = %d\n", cl.attributes_count);
 	for (n = 1; n <= cl.attributes_count; ++n){
 		int name, len;
 		byte *here = read_curpos();
 		p = here;
 		++p;
-		printf("Attribute %d:\n", n);
 		name = read_short();
 		len = read_int();
 		skip_bytes(len);
-		printf("   name %d len %d\n", name, len);
+		if (g.debug) {
+			printf("Attribute %d:\n", n);
+			printf("   name %d len %d\n", name, len);
+		}
 	}
 
 	return 1;
@@ -199,16 +225,14 @@ parse_class(void)
 {
 	// The class steam is open, and the first 8 bytes have been read.
 
-	cl.constant_pool_count = read_short();
-	printf("constant count = %d\n", cl.constant_pool_count);
-
 	if (!parse_constant_pool())
 		return 0;
 	cl.access_flags = read_short();
 	cl.this_class = read_short();
 	cl.super_class = read_short();
-	printf("access = %04x this = %d super = %d\n",
-		cl.access_flags, cl.this_class, cl.super_class);
+	if (g.debug)
+		printf("access = %04x this = %d super = %d\n",
+			cl.access_flags, cl.this_class, cl.super_class);
 	if (!parse_interfaces())
 		return 0;
 	if (!parse_fields())

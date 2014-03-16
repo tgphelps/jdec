@@ -62,6 +62,23 @@ main(int argc, char *argv[])
 			fprintf(stderr, "Failed to parse the class file\n");
 			abort();
 		}
+        	if (g.show_class) {
+                	int i = 0;
+                	int flag = 1;
+                	while (flag) {
+                        	switch (g.show_arg[i++]) {
+                        	case 'z':
+                                	do_show_test();
+                                	break;
+                        	case 0:
+                                	flag = 0;
+                                	break;
+                        	default:
+                                	errmsg("Invalid show argument\n");
+                        	}
+                	}
+        	}
+
 		if (g.disassemble)
 			disassemble();
 		release_buffers();
