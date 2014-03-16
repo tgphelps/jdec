@@ -19,7 +19,7 @@ main(int argc, char *argv[])
 	}
 	if (g.show_help) {
 		usage();
-		exit(1);
+		exit(0);
 	}
 
 	/* We are ready to try to read the entire file into memory. */

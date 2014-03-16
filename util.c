@@ -17,7 +17,7 @@ fatal_err(char *msg)
 }
 
 static char usage_msg[] =
-	"usage: jdec [-h -r -s <opts> -c n --offset n -o src] elf\n";
+	"usage: jdec [-h -r -s <opts> -c n --offset n -o src] classfile\n";
 void
 usage(void)
 {
