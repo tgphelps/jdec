@@ -62,6 +62,8 @@ main(int argc, char *argv[])
 			fprintf(stderr, "Failed to parse the class file\n");
 			abort();
 		}
+		class_close();
+
         	if (g.show_class) {
 			int i = 0;
 			int flag = 1;

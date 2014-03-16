@@ -14,7 +14,16 @@ static byte * p;
 void
 class_open(byte *class)
 {
+	assert(p == 0);
 	p = class;
+}
+
+
+void
+class_close(void)
+{
+	assert(p);
+	p = 0;
 }
 
 

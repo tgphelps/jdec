@@ -29,6 +29,7 @@ void disassemble(void);
 void release_buffers(void);
 
 void class_open(byte *);
+void class_close(void);
 byte *read_curpos(void);
 int read_byte(void);
 int read_short(void);
