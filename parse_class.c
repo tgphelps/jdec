@@ -39,7 +39,6 @@ static int
 parse_constant_pool(void)
 {
 	int n;
-	int dummy;
 	byte **p;
 
 	cl.constant_pool_count = read_short();
@@ -57,36 +56,55 @@ parse_constant_pool(void)
 	for (n = 1; n < cl.constant_pool_count; ++n) {
 		int tag;
 		byte *here = read_curpos();
+		/****
 		if (g.debug)
 			printf("curpos = %p. Storing at %p\n", here, p);
+		****/
 		*p = here;
 		++p;
 		tag = read_byte();
 		switch (tag) {
 		case CONSTANT_Methodref:
 			debug_print("Methodref");
-			dummy = read_int();
+			(void)read_int();
 			break;
 		case CONSTANT_Fieldref:
 			debug_print("Fieldref");
-			dummy = read_int();
+			(void)read_int();
 			break;
 		case CONSTANT_Class:
 			debug_print("Class");
-			dummy = read_short();
+			(void)read_short();
 			break;
 		case CONSTANT_NameAndType:
 			debug_print("NameAndType");
-			dummy = read_int();
+			(void)read_int();
 			break;
 		case CONSTANT_Utf8:
 			debug_print("Utf8");
-			dummy = read_short();
-			skip_bytes(dummy);
+			skip_bytes(read_short());
 			break;
 		case CONSTANT_String:
 			debug_print("String");
-			dummy = read_short();
+			(void)read_short();
+			break;
+		case CONSTANT_Integer:
+			debug_print("Integer");
+			(void)read_int();
+			break;
+		case CONSTANT_Float:
+			debug_print("Float");
+			(void)read_int();
+			break;
+		case CONSTANT_Long:
+			debug_print("Long");
+			(void)read_long();
+			++n;
+			break;
+		case CONSTANT_Double:
+			debug_print("Double");
+			(void)read_long();
+			++n;
 			break;
 		default:
 			fprintf(stderr, "Unknown tag %d\n", tag);

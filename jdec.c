@@ -72,6 +72,9 @@ main(int argc, char *argv[])
 				case 'c':
 					show_constant_pool();
 					break;
+				case 'i':
+					show_interfaces();
+					break;
 				case 'z':
 					do_show_test();
 					break;

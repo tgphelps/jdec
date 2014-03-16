@@ -66,3 +66,13 @@ read_int(void)
 	int j = read_short();
 	return (i << 16) + j;
 }
+
+
+int64_t
+read_long(void)
+{
+	
+	int64_t i = read_int();
+	int64_t j = read_int();
+	return (i <<32) + j;
+}

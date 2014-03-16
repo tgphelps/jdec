@@ -34,7 +34,9 @@ byte *read_curpos(void);
 int read_byte(void);
 int read_short(void);
 int read_int(void);
+int64_t read_long(void);
 void skip_bytes(int n);
 
 void do_show_test(void);
 void show_constant_pool(void);
+void show_interfaces(void);

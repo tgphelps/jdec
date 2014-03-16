@@ -77,6 +77,22 @@ show_constant_pool(void)
 			n2 = read_short();
 			printf("name: %d descr: %d\n", n1, n2);
 			break;
+		case CONSTANT_Long:
+			// I THINK:
+			++i;
+			printf("TODO\n");
+			break;
+		case CONSTANT_Double:
+			// I THINK:
+			++i;
+			printf("TODO\n");
+			break;
+		case CONSTANT_Integer:
+			printf("TODO\n");
+			break;
+		case CONSTANT_Float:
+			printf("TODO\n");
+			break;
 		default:
 			assert(0);
 			printf("TODO");
@@ -84,5 +100,15 @@ show_constant_pool(void)
 		}
 		class_close();
 		++p;
+	}
+}
+
+
+void
+show_interfaces(void)
+{
+	if (cl.interfaces_count) {
+		errmsg("Cannot show interfaces yet\n");
+		abort();
 	}
 }
