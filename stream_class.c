@@ -8,44 +8,47 @@
  * of n-byte strings.
  */
 
-static byte * p;
+static byte * bp;
 
 
 void
 class_open(byte *class)
 {
-	assert(p == 0);
-	p = class;
+	assert(bp == 0);
+	bp = class;
 }
 
 
 void
 class_close(void)
 {
-	assert(p);
-	p = 0;
+	assert(bp);
+	bp = 0;
 }
 
 
 byte *
 read_curpos(void)
 {
-	return p;
+	assert(bp);
+	return bp;
 }
 
 
 void
 skip_bytes(int n)
 {
-	p += n;
+	assert(bp);
+	bp += n;
 }
 
 
 int
 read_byte(void)
 {
-	int n = *p;
-	++p;
+	assert(bp);
+	int n = *bp;
+	++bp;
 	return n;
 }
 
@@ -53,8 +56,9 @@ read_byte(void)
 int
 read_short(void)
 {
-	int n = (*p << 8) + *(p + 1);
-	p += 2;
+	assert(bp);
+	int n = (*bp << 8) + *(bp + 1);
+	bp += 2;
 	return n;
 }
 
@@ -109,4 +113,22 @@ read_long(void)
 	int64_t i = read_int();
 	int64_t j = read_int();
 	return (i <<32) + j;
+}
+
+
+
+int
+get_short(byte *p)
+{
+	int n = (*p << 8) + *(p + 1);
+	return n;
+}
+
+
+int
+get_int(byte *p)
+{
+	int i = get_short(p);
+	int j = get_short(p + 2);
+	return (i << 16) + j;
 }

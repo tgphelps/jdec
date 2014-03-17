@@ -164,12 +164,12 @@ show_attributes(void)
 	printf("ATTRIBUTES\n");
 	for (n = 1; n <= cl.attributes_count; ++n) {
 		int name, len;
-		class_open(*p);
+		byte *ap = *p;
 		++p;
-		name = read_short();
-		len = read_int();
+		printf("p = %p  ap = %p\n", p, ap);
+		name = get_short(ap);
+		len = get_int(ap + 2);
 		printf("Attribute %d: name:%d length:%d\n", n, name, len);
-		class_close();
 	}
 }
 

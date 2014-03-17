@@ -38,6 +38,8 @@ float read_float(void);
 int64_t read_long(void);
 double read_double(void);
 void skip_bytes(int n);
+int get_short(byte *p);
+int get_int(byte *p);
 
 void do_show_test(void);
 void show_constant_pool(void);
