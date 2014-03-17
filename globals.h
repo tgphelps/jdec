@@ -42,5 +42,5 @@ struct {
 	byte *methods;
 
 	int attributes_count;
-	byte **attributes;
+	byte *attributes;
 } cl;

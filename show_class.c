@@ -161,7 +161,18 @@ show_methods(void)
 void
 show_attributes(void)
 {
-	errmsg("TODO: show attributes\n");
+	int n;
+	byte **p = (byte **)cl.attributes;
+	printf("ATTRIBUTES\n");
+	for (n = 1; n <= cl.attributes_count; ++n) {
+		int name, len;
+		class_open(*p);
+		++p;
+		name = read_short();
+		len = read_int();
+		printf("Attribute %d: name:%d length:%d\n", n, name, len);
+		class_close();
+	}
 }
 
 

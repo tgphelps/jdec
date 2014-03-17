@@ -215,17 +215,17 @@ static int
 parse_attributes(void)
 {
 	int n;
-	int count = read_short();
-	byte *p = getbuff(count * sizeof(byte *));
-	cl.attributes_count = count;
-	cl.attributes = (byte **)p;
+	byte **p;
+	cl.attributes_count = read_short();
+	cl.attributes = getbuff(cl.attributes_count * sizeof(byte *));
+	p = (byte **)cl.attributes;
 
 	if (g.debug)
 		printf("attribute count = %d\n", cl.attributes_count);
 	for (n = 1; n <= cl.attributes_count; ++n){
 		int name, len;
 		byte *here = read_curpos();
-		p = here;
+		*p = here;
 		++p;
 		name = read_short();
 		len = read_int();
