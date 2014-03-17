@@ -96,11 +96,15 @@ parse_constant_pool(void)
 			debug_print("Long");
 			(void)read_long();
 			++n;
+			*p = *(p - 1);
+			++p;
 			break;
 		case CONSTANT_Double:
 			debug_print("Double");
 			(void)read_long();
 			++n;
+			*p = *(p - 1);
+			++p;
 			break;
 		default:
 			fprintf(stderr, "Unknown tag %d\n", tag);

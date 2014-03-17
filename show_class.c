@@ -86,14 +86,12 @@ show_constant_pool(void)
 			printf("name: %d descr: %d\n", n1, n2);
 			break;
 		case CONSTANT_Long:
-			// I THINK:
-			++i;
+			//++i;
 			c_long = read_long();
 			printf("value: %ld\n", c_long);
 			break;
 		case CONSTANT_Double:
-			// I THINK:
-			++i;
+			//++i;
 			c_double = read_double();
 			printf("value: %f\n", c_double);
 			break;
