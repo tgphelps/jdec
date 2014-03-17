@@ -113,6 +113,27 @@ show_constant_pool(void)
 
 
 void
+show_fields(void)
+{
+	errmsg("TODO: show fields\n");
+}
+
+
+void
+show_methods(void)
+{
+	errmsg("TODO: show methods\n");
+}
+
+
+void
+show_attributes(void)
+{
+	errmsg("TODO: show attributes\n");
+}
+
+
+void
 show_interfaces(void)
 {
 	if (cl.interfaces_count) {

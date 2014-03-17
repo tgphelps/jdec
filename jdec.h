@@ -42,3 +42,6 @@ void skip_bytes(int n);
 void do_show_test(void);
 void show_constant_pool(void);
 void show_interfaces(void);
+void show_fields(void);
+void show_methods(void);
+void show_attributes(void);

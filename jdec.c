@@ -69,11 +69,20 @@ main(int argc, char *argv[])
 			int flag = 1;
 			while (flag) {
 				switch (g.show_arg[i++]) {
+				case 'a':
+					show_attributes();
+					break;
 				case 'c':
 					show_constant_pool();
 					break;
+				case 'f':
+					show_fields();
+					break;
 				case 'i':
 					show_interfaces();
+					break;
+				case 'm':
+					show_methods();
 					break;
 				case 'z':
 					do_show_test();
