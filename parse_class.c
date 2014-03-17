@@ -56,10 +56,6 @@ parse_constant_pool(void)
 	for (n = 1; n < cl.constant_pool_count; ++n) {
 		int tag;
 		byte *here = read_curpos();
-		/****
-		if (g.debug)
-			printf("curpos = %p. Storing at %p\n", here, p);
-		****/
 		*p = here;
 		++p;
 		tag = read_byte();
@@ -149,19 +145,19 @@ skip_attributes(int count)
 static int
 parse_fields(void)
 {
+	byte **p;
 	int n;
-	int count = read_short();
-	byte *p = getbuff(count * sizeof(byte *));
-	cl.fields_count = count;
+	cl.fields_count = read_short();
 
-	cl.fields = (byte **)p;
+	cl.fields = getbuff(cl.fields_count * sizeof(byte *));
 	if (g.debug)
 		printf("fields count = %d\n", cl.fields_count);
+	p = (byte **)cl.fields;
 	
 	for (n = 0; n < cl.fields_count; ++n) {
 		int flags, name, descr, attrs;
 		byte *here = read_curpos();
-		p = here;
+		*p = here;
 		++p;
 		flags = read_short();
 		name = read_short();

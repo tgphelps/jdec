@@ -44,14 +44,18 @@ show_constant_pool(void)
 	float c_float;
 	double c_double;
 	uint64_t c_long;
+
 	byte **p = (byte **)cl.constant_pool;
 	//printf("constant_pool pointers\n");
 	//rawdump((void *)cl.constant_pool, "", 32);
 	// p -> first constant, maybe.
+	printf("CONSTANTS\n");
 	for (i = 1; i < cl.constant_pool_count; ++i) {
 		int len;
-		byte *constp = *p;
-		class_open(constp);
+		//byte *constp = *p;
+		//class_open(constp);
+		class_open(*p);
+		++p;
 		int tag = read_byte();
 		assert(tag < NUM_CONSTS);
 		printf("Const %d: tag:%s ", i, const_type[tag]);
@@ -107,7 +111,7 @@ show_constant_pool(void)
 			putchar('\n');
 		}
 		class_close();
-		++p;
+		//++p;
 	}
 }
 
@@ -115,7 +119,21 @@ show_constant_pool(void)
 void
 show_fields(void)
 {
-	errmsg("TODO: show fields\n");
+	int n;
+	byte **p = (byte **)cl.fields;
+	printf("FIELDS\n");
+	for (n = 1; n <= cl.fields_count; ++n) {
+		int flags, name, descr, attrs;
+		class_open(*p);
+		flags = read_short();
+		name = read_short();
+		descr = read_short();
+		attrs = read_short();
+		++p;
+		printf("Field %d: flags:%04x name:%d descr:%d attrs:%d\n",
+			n, flags, name, descr, attrs);
+		class_close();
+	}
 }
 
 

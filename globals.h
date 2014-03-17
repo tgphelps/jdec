@@ -36,7 +36,7 @@ struct {
 	byte *interfaces;
 
 	int fields_count;
-	byte **fields;
+	byte *fields;
 
 	int methods_count;
 	byte **methods;
