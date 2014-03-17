@@ -36,6 +36,7 @@ int read_short(void);
 int read_int(void);
 float read_float(void);
 int64_t read_long(void);
+double read_double(void);
 void skip_bytes(int n);
 
 void do_show_test(void);

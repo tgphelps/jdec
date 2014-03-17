@@ -83,6 +83,25 @@ read_float(void)
 }
 
 
+double
+read_double(void)
+{
+	union {
+		char c[8];
+		double n;
+	} u;
+	u.c[7] = read_byte();
+	u.c[6] = read_byte();
+	u.c[5] = read_byte();
+	u.c[4] = read_byte();
+	u.c[3] = read_byte();
+	u.c[2] = read_byte();
+	u.c[1] = read_byte();
+	u.c[0] = read_byte();
+	return u.n;
+}
+
+
 int64_t
 read_long(void)
 {

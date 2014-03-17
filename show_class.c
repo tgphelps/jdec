@@ -42,6 +42,7 @@ show_constant_pool(void)
 	char *cp;
 	int c_int;
 	float c_float;
+	double c_double;
 	uint64_t c_long;
 	byte **p = (byte **)cl.constant_pool;
 	//printf("constant_pool pointers\n");
@@ -89,7 +90,8 @@ show_constant_pool(void)
 		case CONSTANT_Double:
 			// I THINK:
 			++i;
-			printf("TODO\n");
+			c_double = read_double();
+			printf("value: %f\n", c_double);
 			break;
 		case CONSTANT_Integer:
 			c_int = read_int();
