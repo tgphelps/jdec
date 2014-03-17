@@ -52,8 +52,8 @@ show_constant_pool(void)
 	printf("CONSTANTS\n");
 	for (i = 1; i < cl.constant_pool_count; ++i) {
 		int len;
-		//byte *constp = *p;
-		//class_open(constp);
+		// I don't like using this class_open() thing,
+		// but it works just fine for now.
 		class_open(*p);
 		++p;
 		int tag = read_byte();
@@ -122,15 +122,14 @@ show_fields(void)
 	printf("FIELDS\n");
 	for (n = 1; n <= cl.fields_count; ++n) {
 		int flags, name, descr, attrs;
-		class_open(*p);
+		byte *ap = *p;
 		++p;
-		flags = read_short();
-		name = read_short();
-		descr = read_short();
-		attrs = read_short();
+		flags = get_short(ap);
+		name = get_short(ap + 2);
+		descr = get_short(ap + 4);
+		attrs = get_short(ap + 6);
 		printf("Field %d: flags:%04x name:%d descr:%d attrs:%d\n",
 			n, flags, name, descr, attrs);
-		class_close();
 	}
 }
 
@@ -143,15 +142,14 @@ show_methods(void)
 	printf("METHODS\n");
 	for (n = 1; n <= cl.methods_count; ++n) {
 		int flags, name, descr, attrs;
-		class_open(*p);
+		byte *ap = *p;
 		++p;
-		flags = read_short();
-		name = read_short();
-		descr = read_short();
-		attrs = read_short();
+		flags = get_short(ap);
+		name = get_short(ap + 2);
+		descr = get_short(ap + 4);
+		attrs = get_short(ap + 6);
 		printf("Method %d: flags:%04x name:%d descr:%d attrs:%d\n",
 			n, flags, name, descr, attrs);
-		class_close();
 	}
 }
 
