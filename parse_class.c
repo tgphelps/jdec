@@ -181,18 +181,18 @@ static int
 parse_methods(void)
 {
 	int n;
-	int count = read_short();
-	byte *p = getbuff(count * sizeof(byte *));
-	cl.methods_count = count;
+	byte **p;
+	cl.methods_count = read_short();
 
-	cl.methods = (byte **)p;
+	cl.methods = getbuff(cl.methods_count * sizeof(byte *));
 	if (g.debug)
 		printf("method count = %d\n", cl.methods_count);
+	p = (byte **)cl.methods;
 
 	for (n = 0; n < cl.methods_count; ++n) {
 		int flags, name, descr, attrs;
 		byte *here = read_curpos();
-		p = here;
+		*p = here;
 		++p;
 		flags = read_short();
 		name = read_short();

@@ -125,11 +125,11 @@ show_fields(void)
 	for (n = 1; n <= cl.fields_count; ++n) {
 		int flags, name, descr, attrs;
 		class_open(*p);
+		++p;
 		flags = read_short();
 		name = read_short();
 		descr = read_short();
 		attrs = read_short();
-		++p;
 		printf("Field %d: flags:%04x name:%d descr:%d attrs:%d\n",
 			n, flags, name, descr, attrs);
 		class_close();
@@ -140,7 +140,21 @@ show_fields(void)
 void
 show_methods(void)
 {
-	errmsg("TODO: show methods\n");
+	int n;
+	byte **p = (byte **)cl.methods;
+	printf("METHODS\n");
+	for (n = 1; n <= cl.methods_count; ++n) {
+		int flags, name, descr, attrs;
+		class_open(*p);
+		++p;
+		flags = read_short();
+		name = read_short();
+		descr = read_short();
+		attrs = read_short();
+		printf("Method %d: flags:%04x name:%d descr:%d attrs:%d\n",
+			n, flags, name, descr, attrs);
+		class_close();
+	}
 }
 
 
