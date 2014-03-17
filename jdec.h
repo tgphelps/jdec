@@ -34,6 +34,7 @@ byte *read_curpos(void);
 int read_byte(void);
 int read_short(void);
 int read_int(void);
+float read_float(void);
 int64_t read_long(void);
 void skip_bytes(int n);
 
