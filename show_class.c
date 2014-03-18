@@ -90,6 +90,7 @@ show_constant_pool(void)
 	printf("CONSTANTS\n");
 	for (i = 1; i < cl.constant_pool_count; ++i) {
 		int len;
+		struct utf8_info s;
 		// I don't like using this class_open() thing,
 		// but it works just fine for now.
 		class_open(*p);
@@ -101,15 +102,20 @@ show_constant_pool(void)
 			int n1, n2;
 		case CONSTANT_Utf8:
 			len = read_short();
-			printf("len: %d ", len);
+			printf("len: %d \"", len);
 			cp = (char *)read_curpos();
 			for (j = 0; j < len; ++j)
 				putchar(*cp++);
+			putchar('"');
 			putchar('\n');
 			break;
 		case CONSTANT_Class:
 		case CONSTANT_String:
-			printf("index: %d\n", read_short());
+			printf("str: \"");
+			get_utf8_string(read_short(), &s);
+			print_utf8(&s);
+			putchar('"');
+			putchar('\n');
 			break;
 		case CONSTANT_Fieldref:
 		case CONSTANT_Methodref:
@@ -119,9 +125,13 @@ show_constant_pool(void)
 			printf("class: %d name_and_type: %d\n", n1, n2);
 			break;
 		case CONSTANT_NameAndType:
-			n1 = read_short();
-			n2 = read_short();
-			printf("name: %d descr: %d\n", n1, n2);
+			printf("name: ");
+			get_utf8_string(read_short(), &s);
+			print_utf8(&s);
+			printf(" type: ");
+			get_utf8_string(read_short(), &s);
+			print_utf8(&s);
+			putchar('\n');
 			break;
 		case CONSTANT_Long:
 			//++i;
