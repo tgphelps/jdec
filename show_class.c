@@ -210,16 +210,20 @@ void
 show_attributes(void)
 {
 	int n;
+	struct utf8_info s;
 	byte **p = (byte **)cl.attributes;
 	printf("ATTRIBUTES\n");
 	for (n = 1; n <= cl.attributes_count; ++n) {
-		int name, len;
+		int len;
 		byte *ap = *p;
 		++p;
-		printf("p = %p  ap = %p\n", p, ap);
-		name = get_short(ap);
+		//printf("p = %p  ap = %p\n", p, ap);
+		printf("Attribute %d: name:", n);
+
+		get_utf8_string(get_short(ap), &s);
+		print_utf8(&s);
 		len = get_int(ap + 2);
-		printf("Attribute %d: name:%d length:%d\n", n, name, len);
+		printf(" length:%d\n", len);
 	}
 }
 
