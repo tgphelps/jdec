@@ -183,18 +183,25 @@ void
 show_methods(void)
 {
 	int n;
+	struct utf8_info s;
 	byte **p = (byte **)cl.methods;
 	printf("METHODS\n");
 	for (n = 1; n <= cl.methods_count; ++n) {
-		int flags, name, descr, attrs;
+		int flags, attrs;
 		byte *ap = *p;
 		++p;
+		printf("Method %d: name:", n);
+
+		get_utf8_string(get_short(ap + 2), &s);
+		print_utf8(&s);
+
+		printf(" descr:");
+		get_utf8_string(get_short(ap + 4), &s);
+		print_utf8(&s);
+
 		flags = get_short(ap);
-		name = get_short(ap + 2);
-		descr = get_short(ap + 4);
 		attrs = get_short(ap + 6);
-		printf("Method %d: flags:%04x name:%d descr:%d attrs:%d\n",
-			n, flags, name, descr, attrs);
+		printf(" flags:%04x attrs:%d\n", flags, attrs);
 	}
 }
 
