@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 #include "jdec.h"
 #include "java.h"
 
 extern
 #include "globals.h"
 
+
+struct utf8_info {
+	int len;
+	char *cp;
+};
 
 #define NUM_CONSTS 13
 
@@ -22,8 +28,40 @@ char *const_type[NUM_CONSTS] = {
 	"Field",
 	"Method",
 	"IfMethod",
-	"NameAndtype"
+	"NameAndType"
 };
+
+
+static void
+print_utf8(struct utf8_info *s)
+{
+	int i;
+	for (i = 0; i < s->len; ++i)
+		putchar(s->cp[i]);
+}
+
+
+/* Return a point to the constant pool entry for constant <n>. */
+
+static byte *
+get_constant(int n)
+{
+	byte **p = (byte **)cl.constant_pool;
+	return *(p + n - 1);
+	return 0;
+}
+
+
+static void
+get_utf8_string(int n, struct utf8_info *s)
+{
+	byte *bcon = get_constant(n);
+	char *ccon = (char *)bcon;
+	assert(*bcon == CONSTANT_Utf8);
+	s->len = get_short(bcon + 1);
+	s->cp = ccon + 3;
+}
+
 
 void
 do_show_test(void)
@@ -118,18 +156,25 @@ void
 show_fields(void)
 {
 	int n;
+	struct utf8_info s;
 	byte **p = (byte **)cl.fields;
 	printf("FIELDS\n");
 	for (n = 1; n <= cl.fields_count; ++n) {
-		int flags, name, descr, attrs;
+		int flags, attrs;
 		byte *ap = *p;
 		++p;
+		printf("Field %d: name:", n);
+
+		get_utf8_string(get_short(ap + 2), &s);
+		print_utf8(&s);
+		printf(" descr:");
+		get_utf8_string(get_short(ap + 4), &s);
+		print_utf8(&s);
+
 		flags = get_short(ap);
-		name = get_short(ap + 2);
-		descr = get_short(ap + 4);
 		attrs = get_short(ap + 6);
-		printf("Field %d: flags:%04x name:%d descr:%d attrs:%d\n",
-			n, flags, name, descr, attrs);
+
+		printf(" flags:%04x attrs:%d\n", flags, attrs);
 	}
 }
 

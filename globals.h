@@ -25,7 +25,6 @@ struct {
 	int major_version;
 
 	int constant_pool_count;
-	//byte **constant_pool;
 	byte *constant_pool;
 
 	int access_flags;
