@@ -172,10 +172,8 @@ parse_fields(void)
 			printf("   flags %04x name %d descr %d attrs %d\n",
 				flags, name, descr, attrs);
 		}
-		if (attrs) {
-			errmsg("ERROR: Cannot handle field attributes yet\n");
-			return 0;
-		}
+		if (attrs)
+			skip_attributes(attrs);
 	}
 	return 1;
 }
