@@ -8,8 +8,8 @@ void dumpline(FILE *fp, unsigned char *buff, int size, int hex_only)
 {
 int i, adj;
 
-for (i = 0; i < size; ++i)
-	fprintf(fp, "%02x ", buff[i]);
+    for (i = 0; i < size; ++i)
+	    fprintf(fp, "%02x ", buff[i]);
 	adj = 3 * (LINE_SIZE - size) + 2;
 	for (i = 0; i < adj; ++i)
 		fprintf(fp, " ");
